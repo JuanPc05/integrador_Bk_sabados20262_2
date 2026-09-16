@@ -1,0 +1,15 @@
+root = true
+
+[*]
+charset = utf-8            # crítico para ñ, á, é... sin importar el SO
+end_of_line = lf           # LF por defecto en todo el repo
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+[*.{cmd,bat}]
+end_of_line = crlf         # excepción: Windows necesita CRLF aquí
+
+[*.{yml,yaml,json}]
+indent_size = 2

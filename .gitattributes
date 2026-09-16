@@ -1,0 +1,18 @@
+# Normalización automática: Git detecta archivos de texto y los ALMACENA con LF.
+* text=auto
+
+# Scripts de shell y el wrapper Unix: SIEMPRE LF.
+# Si les entra CRLF, no arrancan en Linux/Mac.
+*.sh      text eol=lf
+mvnw      text eol=lf
+gradlew   text eol=lf
+
+# Scripts de Windows: SIEMPRE CRLF (los .bat/.cmd lo requieren para funcionar).
+*.cmd     text eol=crlf
+*.bat     text eol=crlf
+
+# Binarios: que Git NO toque finales de línea (los corrompería).
+*.jar     binary
+*.png     binary
+*.jpg     binary
+*.ico     binary

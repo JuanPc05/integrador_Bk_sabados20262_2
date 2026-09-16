@@ -1,0 +1,48 @@
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar   # ← RESTAURADO el '!': des-ignora (blinda) el wrapper
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+### Sistema operativo ###          # ← NUEVO
+# Basura del Explorador de Windows (tus compañeros) y de macOS
+Thumbs.db
+desktop.ini
+.DS_Store
+
+### Secretos / config local ###     # ← NUEVO — NUNCA al repo
+# La contraseña de BD va por variable de entorno. Si alguien usa
+# un archivo local en su lugar, que quede excluido.
+application-local.properties
+.env
+
+### Logs ###                        # ← NUEVO
+*.log
