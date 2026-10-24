@@ -1,4 +1,4 @@
 package com.cesde.proyecta.controller;
 
-public class prioridadController {
+public class UsuarioController {
 }

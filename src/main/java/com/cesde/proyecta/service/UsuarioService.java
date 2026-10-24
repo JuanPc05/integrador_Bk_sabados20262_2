@@ -1,4 +1,4 @@
 package com.cesde.proyecta.service;
 
-public class prioridadService {
+public class UsuarioService {
 }

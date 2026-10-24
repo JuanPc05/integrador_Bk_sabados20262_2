@@ -1,0 +1,13 @@
+package com.cesde.proyecta.model.enums;
+
+public enum SectorEconomico {
+    TECNOLOGIA_Y_SOFTWARE,
+    GASTRONOMIA_Y_TURISMO,
+    MANUFACTURA_E_INDUSTRIA,
+    COMERCIO_Y_RETAIL,
+    SERVICIOS_FINANCIEROS,
+    SALUD_Y_BIENESTAR,
+    EDUCACION,
+    LOGISTICA_Y_TRANSPORTE,
+    OTRO
+}
