@@ -4,9 +4,9 @@ public enum EstadoReto {
     BORRADOR,
     RADICADO,
     EN_REVISION,
-    EN_CONVOCATORIA, // Equivale a APROBADO y abierto a grupos
+    EN_CONVOCATORIA,
     ASIGNADO,
-    EN_DESARROLLO,   // Equivale a EN_EJECUCION en el frontend
+    EN_DESARROLLO,
     FINALIZADO,
     RECHAZADO
 }
