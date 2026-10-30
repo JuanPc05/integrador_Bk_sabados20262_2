@@ -10,56 +10,54 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
-// Guarda cada cambio de estado de un reto (antes era la "Tabla Registros")
 @Entity
 @Table(name = "historial_reto")
 public class HistorialReto {
 
-    // dejo que la base genere el UUID para que nadie lo mande desde el front
-    // lo guardo como VARCHAR(36) igual que Prioridad, para que después coincida con las otras tablas
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(name = "id", length = 36, nullable = false, updatable = false)
+    @Column(name = "id", nullable = false, updatable = false)
     private UUID id;
 
-    // la fecha no se puede cambiar después de guardar el registro
     @Column(name = "fecha_registro", nullable = false, updatable = false)
     private LocalDateTime fechaRegistro;
 
-    // guardo el enum como texto para que no se dañe si cambio el orden de los valores
-    // puede ser nulo porque el primer estado de un reto no tiene anterior
     @Enumerated(EnumType.STRING)
-    @Column(name = "estado_anterior", length = 20)
+    @Column(name = "estado_anterior", length = 50)
     private EstadoReto estadoAnterior;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "estado_nuevo", nullable = false, length = 20)
+    @Column(name = "estado_nuevo", nullable = false, length = 50)
     private EstadoReto estadoNuevo;
 
     @Column(columnDefinition = "TEXT")
     private String observacion;
 
-    // por ahora guardo los ids como UUID simples, después los conecto con Reto y Usuario
-    @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(name = "id_reto", length = 36, nullable = false)
+    @Column(name = "id_reto", nullable = false)
     private UUID idReto;
 
-    @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(name = "id_usuario", length = 36, nullable = false)
+    @Column(name = "id_usuario", nullable = false)
     private UUID idUsuario;
 
-    // JPA necesita un constructor vacío
     public HistorialReto() {
     }
 
-    // pongo la fecha automáticamente justo antes de guardar
+    public HistorialReto(UUID id, LocalDateTime fechaRegistro, EstadoReto estadoAnterior,
+                         EstadoReto estadoNuevo, String observacion, UUID idReto, UUID idUsuario) {
+        this.id = id;
+        this.fechaRegistro = fechaRegistro;
+        this.estadoAnterior = estadoAnterior;
+        this.estadoNuevo = estadoNuevo;
+        this.observacion = observacion;
+        this.idReto = idReto;
+        this.idUsuario = idUsuario;
+    }
+
     @PrePersist
     void antesDeGuardar() {
         if (fechaRegistro == null) {
@@ -71,8 +69,16 @@ public class HistorialReto {
         return id;
     }
 
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
     public LocalDateTime getFechaRegistro() {
         return fechaRegistro;
+    }
+
+    public void setFechaRegistro(LocalDateTime fechaRegistro) {
+        this.fechaRegistro = fechaRegistro;
     }
 
     public EstadoReto getEstadoAnterior() {
@@ -113,5 +119,18 @@ public class HistorialReto {
 
     public void setIdUsuario(UUID idUsuario) {
         this.idUsuario = idUsuario;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        HistorialReto that = (HistorialReto) o;
+        return id != null && Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

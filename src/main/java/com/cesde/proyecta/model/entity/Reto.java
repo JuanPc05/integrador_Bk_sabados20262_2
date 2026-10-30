@@ -1,12 +1,21 @@
-﻿package com.cesde.proyecta.model.entity;
+package com.cesde.proyecta.model.entity;
 
 import com.cesde.proyecta.model.enums.EstadoReto;
-import jakarta.persistence.*;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -15,8 +24,7 @@ public class Reto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(name = "id", length = 36, nullable = false, updatable = false)
+    @Column(name = "id", nullable = false, updatable = false)
     private UUID id;
 
     @Column(name = "nombre", length = 100, nullable = false)
@@ -38,8 +46,6 @@ public class Reto {
     @Column(name = "estado_actual", length = 50, nullable = false)
     private EstadoReto estadoActual;
 
-    // --- RELACIONES (Llaves Foráneas) ---
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_empresa", nullable = false)
     private Empresa empresa;
@@ -52,39 +58,114 @@ public class Reto {
     @JoinColumn(name = "id_prioridad", nullable = false)
     private Prioridad prioridad;
 
-    // Constructor vacío exigido por JPA
     public Reto() {
     }
 
-    // --- GETTERS Y SETTERS MANUALES (Estilo del equipo) ---
+    public Reto(UUID id, String nombre, String descripcion, LocalDate fechaInicio, LocalDate fechaFin,
+                LocalDateTime fechaLimiteRpta, EstadoReto estadoActual, Empresa empresa,
+                CategoriaAcademica categoria, Prioridad prioridad) {
+        this.id = id;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
+        this.fechaLimiteRpta = fechaLimiteRpta;
+        this.estadoActual = estadoActual;
+        this.empresa = empresa;
+        this.categoria = categoria;
+        this.prioridad = prioridad;
+    }
 
-    public UUID getId() { return id; }
-    public void setId(UUID id) { this.id = id; }
+    public UUID getId() {
+        return id;
+    }
 
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
-    public String getDescripcion() { return descripcion; }
-    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
+    public String getNombre() {
+        return nombre;
+    }
 
-    public LocalDate getFechaInicio() { return fechaInicio; }
-    public void setFechaInicio(LocalDate fechaInicio) { this.fechaInicio = fechaInicio; }
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 
-    public LocalDate getFechaFin() { return fechaFin; }
-    public void setFechaFin(LocalDate fechaFin) { this.fechaFin = fechaFin; }
+    public String getDescripcion() {
+        return descripcion;
+    }
 
-    public LocalDateTime getFechaLimiteRpta() { return fechaLimiteRpta; }
-    public void setFechaLimiteRpta(LocalDateTime fechaLimiteRpta) { this.fechaLimiteRpta = fechaLimiteRpta; }
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
 
-    public EstadoReto getEstadoActual() { return estadoActual; }
-    public void setEstadoActual(EstadoReto estadoActual) { this.estadoActual = estadoActual; }
+    public LocalDate getFechaInicio() {
+        return fechaInicio;
+    }
 
-    public Empresa getEmpresa() { return empresa; }
-    public void setEmpresa(Empresa empresa) { this.empresa = empresa; }
+    public void setFechaInicio(LocalDate fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
 
-    public CategoriaAcademica getCategoria() { return categoria; }
-    public void setCategoria(CategoriaAcademica categoria) { this.categoria = categoria; }
+    public LocalDate getFechaFin() {
+        return fechaFin;
+    }
 
-    public Prioridad getPrioridad() { return prioridad; }
-    public void setPrioridad(Prioridad prioridad) { this.prioridad = prioridad; }
+    public void setFechaFin(LocalDate fechaFin) {
+        this.fechaFin = fechaFin;
+    }
+
+    public LocalDateTime getFechaLimiteRpta() {
+        return fechaLimiteRpta;
+    }
+
+    public void setFechaLimiteRpta(LocalDateTime fechaLimiteRpta) {
+        this.fechaLimiteRpta = fechaLimiteRpta;
+    }
+
+    public EstadoReto getEstadoActual() {
+        return estadoActual;
+    }
+
+    public void setEstadoActual(EstadoReto estadoActual) {
+        this.estadoActual = estadoActual;
+    }
+
+    public Empresa getEmpresa() {
+        return empresa;
+    }
+
+    public void setEmpresa(Empresa empresa) {
+        this.empresa = empresa;
+    }
+
+    public CategoriaAcademica getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(CategoriaAcademica categoria) {
+        this.categoria = categoria;
+    }
+
+    public Prioridad getPrioridad() {
+        return prioridad;
+    }
+
+    public void setPrioridad(Prioridad prioridad) {
+        this.prioridad = prioridad;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Reto reto = (Reto) o;
+        return id != null && Objects.equals(id, reto.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

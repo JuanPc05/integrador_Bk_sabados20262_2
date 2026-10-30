@@ -1,10 +1,16 @@
 package com.cesde.proyecta.model.entity;
 
 import com.cesde.proyecta.model.enums.SectorEconomico;
-import jakarta.persistence.*;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -13,8 +19,7 @@ public class Empresa {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(name = "id", length = 36, nullable = false, updatable = false)
+    @Column(name = "id", nullable = false, updatable = false)
     private UUID id;
 
     @Column(name = "nit", length = 30, nullable = false, unique = true)
@@ -37,32 +42,97 @@ public class Empresa {
     private String telefono;
 
     @Column(name = "activa", nullable = false)
-    private Boolean activa = true;
+    private Boolean activa = Boolean.TRUE;
 
     public Empresa() {
     }
 
-    public UUID getId() { return id; }
-    public void setId(UUID id) { this.id = id; }
+    public Empresa(UUID id, String nit, String nombre, SectorEconomico sector,
+                   String contactoNombre, String correo, String telefono, Boolean activa) {
+        this.id = id;
+        this.nit = nit;
+        this.nombre = nombre;
+        this.sector = sector;
+        this.contactoNombre = contactoNombre;
+        this.correo = correo;
+        this.telefono = telefono;
+        this.activa = activa;
+    }
 
-    public String getNit() { return nit; }
-    public void setNit(String nit) { this.nit = nit; }
+    public UUID getId() {
+        return id;
+    }
 
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
-    public SectorEconomico getSector() { return sector; }
-    public void setSector(SectorEconomico sector) { this.sector = sector; }
+    public String getNit() {
+        return nit;
+    }
 
-    public String getContactoNombre() { return contactoNombre; }
-    public void setContactoNombre(String contactoNombre) { this.contactoNombre = contactoNombre; }
+    public void setNit(String nit) {
+        this.nit = nit;
+    }
 
-    public String getCorreo() { return correo; }
-    public void setCorreo(String correo) { this.correo = correo; }
+    public String getNombre() {
+        return nombre;
+    }
 
-    public String getTelefono() { return telefono; }
-    public void setTelefono(String telefono) { this.telefono = telefono; }
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 
-    public Boolean getActiva() { return activa; }
-    public void setActiva(Boolean activa) { this.activa = activa; }
+    public SectorEconomico getSector() {
+        return sector;
+    }
+
+    public void setSector(SectorEconomico sector) {
+        this.sector = sector;
+    }
+
+    public String getContactoNombre() {
+        return contactoNombre;
+    }
+
+    public void setContactoNombre(String contactoNombre) {
+        this.contactoNombre = contactoNombre;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    public Boolean getActiva() {
+        return activa;
+    }
+
+    public void setActiva(Boolean activa) {
+        this.activa = activa;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Empresa empresa = (Empresa) o;
+        return id != null && Objects.equals(id, empresa.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

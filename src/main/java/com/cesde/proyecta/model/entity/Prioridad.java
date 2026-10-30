@@ -1,9 +1,13 @@
 package com.cesde.proyecta.model.entity;
 
-import jakarta.persistence.*;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -12,8 +16,7 @@ public class Prioridad {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(name = "id", length = 36, nullable = false, updatable = false)
+    @Column(name = "id", nullable = false, updatable = false)
     private UUID id;
 
     @Column(name = "nombre", length = 50, nullable = false, unique = true)
@@ -25,27 +28,64 @@ public class Prioridad {
     @Column(name = "dias_max_respuesta", nullable = false)
     private Integer diasMaxRespuesta;
 
-    // Constructor vacío obligatorio para JPA
     public Prioridad() {
     }
 
-    // Constructor útil para nuestro DataSeeder
     public Prioridad(String nombre, Integer nivel, Integer diasMaxRespuesta) {
         this.nombre = nombre;
         this.nivel = nivel;
         this.diasMaxRespuesta = diasMaxRespuesta;
     }
 
-    // Getters y Setters
-    public UUID getId() { return id; }
-    public void setId(UUID id) { this.id = id; }
+    public Prioridad(UUID id, String nombre, Integer nivel, Integer diasMaxRespuesta) {
+        this.id = id;
+        this.nombre = nombre;
+        this.nivel = nivel;
+        this.diasMaxRespuesta = diasMaxRespuesta;
+    }
 
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
+    public UUID getId() {
+        return id;
+    }
 
-    public Integer getNivel() { return nivel; }
-    public void setNivel(Integer nivel) { this.nivel = nivel; }
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
-    public Integer getDiasMaxRespuesta() { return diasMaxRespuesta; }
-    public void setDiasMaxRespuesta(Integer diasMaxRespuesta) { this.diasMaxRespuesta = diasMaxRespuesta; }
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public Integer getNivel() {
+        return nivel;
+    }
+
+    public void setNivel(Integer nivel) {
+        this.nivel = nivel;
+    }
+
+    public Integer getDiasMaxRespuesta() {
+        return diasMaxRespuesta;
+    }
+
+    public void setDiasMaxRespuesta(Integer diasMaxRespuesta) {
+        this.diasMaxRespuesta = diasMaxRespuesta;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Prioridad prioridad = (Prioridad) o;
+        return id != null && Objects.equals(id, prioridad.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }
