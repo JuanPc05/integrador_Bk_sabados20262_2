@@ -1,7 +1,16 @@
 package com.cesde.proyecta.model.entity;
 
 import com.cesde.proyecta.model.enums.RolUsuario;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -22,7 +31,7 @@ public class Usuario {
     private String passwordHash;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 40)
     private RolUsuario rol;
 
     @Column(name = "id_empresa")
@@ -31,11 +40,9 @@ public class Usuario {
     @Column(nullable = false)
     private Boolean activo;
 
-    // 1. Constructor vacío (Obligatorio para que Hibernate/JPA pueda instanciar la entidad)
     public Usuario() {
     }
 
-    // 2. Constructor con todos los argumentos (Opcional, pero útil para instanciar objetos rápidamente)
     public Usuario(UUID id, String nombreCompleto, String email, String passwordHash, RolUsuario rol, UUID idEmpresa, Boolean activo) {
         this.id = id;
         this.nombreCompleto = nombreCompleto;
@@ -45,8 +52,6 @@ public class Usuario {
         this.idEmpresa = idEmpresa;
         this.activo = activo;
     }
-
-    // 3. Getters y Setters tradicionales de Java
 
     public UUID getId() {
         return id;
@@ -102,5 +107,18 @@ public class Usuario {
 
     public void setActivo(Boolean activo) {
         this.activo = activo;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Usuario usuario = (Usuario) o;
+        return id != null && Objects.equals(id, usuario.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }
