@@ -92,11 +92,13 @@ public class AuthServiceImpl implements AuthService {
             long exp = now + 86400; // 24 horas
 
             String headerJson = "{\"alg\":\"HS256\",\"typ\":\"JWT\"}";
+            String empresaClaim = usuario.getIdEmpresa() != null ? "\"" + usuario.getIdEmpresa() + "\"" : "null";
             String payloadJson = String.format(
-                    "{\"sub\":\"%s\",\"id\":\"%s\",\"rol\":\"%s\",\"iat\":%d,\"exp\":%d}",
+                    "{\"sub\":\"%s\",\"id\":\"%s\",\"rol\":\"%s\",\"idEmpresa\":%s,\"iat\":%d,\"exp\":%d}",
                     usuario.getEmail(),
                     usuario.getId(),
                     usuario.getRol().name(),
+                    empresaClaim,
                     now,
                     exp
             );
