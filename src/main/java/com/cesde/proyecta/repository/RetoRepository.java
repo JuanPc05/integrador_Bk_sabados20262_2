@@ -5,6 +5,7 @@ import com.cesde.proyecta.model.enums.EstadoReto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,4 +17,14 @@ public interface RetoRepository extends JpaRepository<Reto, UUID> {
     List<Reto> findByEmpresaId(UUID idEmpresa);
 
     List<Reto> findByCategoriaId(UUID idCategoria);
+
+    long countByEstadoActual(EstadoReto estadoActual);
+
+    long countByEstadoActualIn(Collection<EstadoReto> estados);
+
+    long countByEmpresaId(UUID idEmpresa);
+
+    long countByEmpresaIdAndEstadoActual(UUID idEmpresa, EstadoReto estadoActual);
+
+    long countByEmpresaIdAndEstadoActualIn(UUID idEmpresa, Collection<EstadoReto> estados);
 }

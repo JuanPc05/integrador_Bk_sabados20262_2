@@ -10,10 +10,17 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -32,11 +39,30 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(
                                 "/api/v1/auth/**",
+                                "/api/auth/**",
                                 "/api/v1/public/**",
                                 "/error"
                         ).permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/categorias/**", "/api/prioridades/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/categorias/**", "/api/prioridades/**").hasRole(
+                                "ADMIN_UNIVERSIDAD"
+                        )
+                        .requestMatchers(HttpMethod.GET, "/api/retos/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/retos/**").hasAnyRole(
+                                "REPRESENTANTE_EMPRESA",
+                                "ADMIN_UNIVERSIDAD"
+                        )
+                        .requestMatchers(HttpMethod.PUT, "/api/retos/**").hasAnyRole(
+                                "REPRESENTANTE_EMPRESA",
+                                "ADMIN_UNIVERSIDAD"
+                        )
+                        .requestMatchers(HttpMethod.DELETE, "/api/retos/**").hasAnyRole(
+                                "REPRESENTANTE_EMPRESA",
+                                "ADMIN_UNIVERSIDAD"
+                        )
                         .anyRequest().authenticated()
-                );
+                )
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
