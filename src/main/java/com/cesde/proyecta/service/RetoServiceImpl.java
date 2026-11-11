@@ -1,5 +1,6 @@
 package com.cesde.proyecta.service;
 
+import com.cesde.proyecta.dto.EstadoRetoUpdateDTO;
 import com.cesde.proyecta.dto.RetoRequestDTO;
 import com.cesde.proyecta.dto.RetoResponseDTO;
 import com.cesde.proyecta.exception.ConflictoNegocioException;
@@ -100,6 +101,16 @@ public class RetoServiceImpl implements RetoService {
         retoExistente.setEmpresa(empresa);
         retoExistente.setCategoria(categoria);
         retoExistente.setPrioridad(prioridad);
+
+        Reto actualizado = retoRepository.save(retoExistente);
+        return mapearAResponseDTO(actualizado);
+    }
+
+    @Override
+    @Transactional
+    public RetoResponseDTO actualizarEstado(UUID id, EstadoRetoUpdateDTO dto) {
+        Reto retoExistente = buscarEntidadPorId(id);
+        retoExistente.setEstadoActual(dto.getEstadoActual());
 
         Reto actualizado = retoRepository.save(retoExistente);
         return mapearAResponseDTO(actualizado);

@@ -1,5 +1,6 @@
 package com.cesde.proyecta.service;
 
+import com.cesde.proyecta.dto.EstadoRetoUpdateDTO;
 import com.cesde.proyecta.dto.RetoRequestDTO;
 import com.cesde.proyecta.dto.RetoResponseDTO;
 
@@ -15,6 +16,8 @@ public interface RetoService {
     RetoResponseDTO crear(RetoRequestDTO request);
 
     RetoResponseDTO actualizar(UUID id, RetoRequestDTO request);
+
+    RetoResponseDTO actualizarEstado(UUID id, EstadoRetoUpdateDTO dto);
 
     void eliminar(UUID id);
 }

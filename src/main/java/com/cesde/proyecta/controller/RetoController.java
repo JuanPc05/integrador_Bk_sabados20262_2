@@ -1,5 +1,6 @@
 package com.cesde.proyecta.controller;
 
+import com.cesde.proyecta.dto.EstadoRetoUpdateDTO;
 import com.cesde.proyecta.dto.RetoRequestDTO;
 import com.cesde.proyecta.dto.RetoResponseDTO;
 import com.cesde.proyecta.service.RetoService;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -49,6 +51,13 @@ public class RetoController {
             @PathVariable UUID id,
             @Valid @RequestBody RetoRequestDTO request) {
         return ResponseEntity.ok(retoService.actualizar(id, request));
+    }
+
+    @PatchMapping("/{id}/estado")
+    public ResponseEntity<RetoResponseDTO> actualizarEstado(
+            @PathVariable UUID id,
+            @Valid @RequestBody EstadoRetoUpdateDTO dto) {
+        return ResponseEntity.ok(retoService.actualizarEstado(id, dto));
     }
 
     @DeleteMapping("/{id}")
