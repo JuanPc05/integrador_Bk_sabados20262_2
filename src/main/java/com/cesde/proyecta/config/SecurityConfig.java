@@ -56,6 +56,10 @@ public class SecurityConfig {
                                 "REPRESENTANTE_EMPRESA",
                                 "ADMIN_UNIVERSIDAD"
                         )
+                        .requestMatchers(HttpMethod.PATCH, "/api/retos/**").hasAnyRole(
+                                "REPRESENTANTE_EMPRESA",
+                                "ADMIN_UNIVERSIDAD"
+                        )
                         .requestMatchers(HttpMethod.DELETE, "/api/retos/**").hasAnyRole(
                                 "REPRESENTANTE_EMPRESA",
                                 "ADMIN_UNIVERSIDAD"
