@@ -1,10 +1,15 @@
 package com.cesde.proyecta.config;
 
+import com.cesde.proyecta.model.entity.CategoriaAcademica;
 import com.cesde.proyecta.model.entity.Empresa;
+import com.cesde.proyecta.model.entity.Prioridad;
 import com.cesde.proyecta.model.entity.Usuario;
+import com.cesde.proyecta.model.enums.EscuelaResponsable;
 import com.cesde.proyecta.model.enums.RolUsuario;
 import com.cesde.proyecta.model.enums.SectorEconomico;
+import com.cesde.proyecta.repository.CategoriaAcademicaRepository;
 import com.cesde.proyecta.repository.EmpresaRepository;
+import com.cesde.proyecta.repository.PrioridadRepository;
 import com.cesde.proyecta.repository.UsuarioRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +41,8 @@ public class DataSeedConfig implements CommandLineRunner {
 
     private final UsuarioRepository usuarioRepository;
     private final EmpresaRepository empresaRepository;
+    private final CategoriaAcademicaRepository categoriaRepository;
+    private final PrioridadRepository prioridadRepository;
     private final PasswordEncoder passwordEncoder;
 
     /**
@@ -44,15 +51,21 @@ public class DataSeedConfig implements CommandLineRunner {
     public DataSeedConfig(
             UsuarioRepository usuarioRepository,
             EmpresaRepository empresaRepository,
+            CategoriaAcademicaRepository categoriaRepository,
+            PrioridadRepository prioridadRepository,
             PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
         this.empresaRepository = empresaRepository;
+        this.categoriaRepository = categoriaRepository;
+        this.prioridadRepository = prioridadRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     @Transactional
     public void run(String... args) {
+        sembrarCatalogosBase();
+
         // Verificación de idempotencia a nivel general y por registro
         if (usuarioRepository.count() > 0
                 && usuarioRepository.existsByEmail(EMAIL_ADMIN)
@@ -112,6 +125,34 @@ public class DataSeedConfig implements CommandLineRunner {
         }
 
         log.info("[DataSeed] Sembrado de datos completado exitosamente.");
+    }
+
+    private void sembrarCatalogosBase() {
+        if (categoriaRepository.count() == 0) {
+            categoriaRepository.save(new CategoriaAcademica(
+                    "Desarrollo Web & Cloud",
+                    "Aplicaciones web fullstack, APIs y arquitectura en la nube.",
+                    EscuelaResponsable.NUEVAS_TECNOLOGIAS
+            ));
+            categoriaRepository.save(new CategoriaAcademica(
+                    "Inteligencia Artificial & Datos",
+                    "Analítica de datos, modelos predictivos y automatización inteligente.",
+                    EscuelaResponsable.NUEVAS_TECNOLOGIAS
+            ));
+            categoriaRepository.save(new CategoriaAcademica(
+                    "Diseño UX & Producto Digital",
+                    "Diseño de interfaces, experiencia de usuario y prototipado interactivo.",
+                    EscuelaResponsable.INDUSTRIAS_CREATIVAS
+            ));
+            log.info("[DataSeed] Categorías académicas iniciales sembradas.");
+        }
+
+        if (prioridadRepository.count() == 0) {
+            prioridadRepository.save(new Prioridad("Alta / Urgente", 1, 5));
+            prioridadRepository.save(new Prioridad("Media", 2, 10));
+            prioridadRepository.save(new Prioridad("Estándar / Baja", 3, 15));
+            log.info("[DataSeed] Prioridades SLA iniciales sembradas.");
+        }
     }
 }
 
