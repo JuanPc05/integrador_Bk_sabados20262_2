@@ -8,5 +8,7 @@ public enum EstadoReto {
     ASIGNADO,
     EN_DESARROLLO,
     FINALIZADO,
+    CANCELADO,
+    APLAZADO,
     RECHAZADO
 }

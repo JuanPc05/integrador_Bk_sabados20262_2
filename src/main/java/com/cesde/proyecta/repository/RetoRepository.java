@@ -16,6 +16,10 @@ public interface RetoRepository extends JpaRepository<Reto, UUID> {
 
     List<Reto> findByEmpresaId(UUID idEmpresa);
 
+    default List<Reto> findByIdEmpresa(UUID idEmpresa) {
+        return findByEmpresaId(idEmpresa);
+    }
+
     List<Reto> findByCategoriaId(UUID idCategoria);
 
     long countByEstadoActual(EstadoReto estadoActual);

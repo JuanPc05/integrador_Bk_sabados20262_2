@@ -43,6 +43,7 @@ public class SecurityConfig {
                                 "/api/v1/public/**",
                                 "/error"
                         ).permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/empresas/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/categorias/**", "/api/prioridades/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/categorias/**", "/api/prioridades/**").hasRole(
                                 "ADMIN_UNIVERSIDAD"
@@ -58,7 +59,9 @@ public class SecurityConfig {
                         )
                         .requestMatchers(HttpMethod.PATCH, "/api/retos/**").hasAnyRole(
                                 "REPRESENTANTE_EMPRESA",
-                                "ADMIN_UNIVERSIDAD"
+                                "ADMIN_UNIVERSIDAD",
+                                "COORDINADOR_ESCUELA",
+                                "DOCENTE"
                         )
                         .requestMatchers(HttpMethod.DELETE, "/api/retos/**").hasAnyRole(
                                 "REPRESENTANTE_EMPRESA",
