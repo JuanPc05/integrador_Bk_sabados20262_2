@@ -37,6 +37,7 @@ public class DataSeedConfig implements CommandLineRunner {
     private static final String PASSWORD_BASE = "Cesde2026*";
     private static final String EMAIL_ADMIN = "admin.conecta@cesde.edu.co";
     private static final String EMAIL_REPRESENTANTE = "representante@techantioquia.com";
+    private static final String EMAIL_ESTUDIANTE = "estudiante.conecta@cesde.edu.co";
     private static final String NIT_EMPRESA_PRUEBA = "900123456-1";
 
     private final UsuarioRepository usuarioRepository;
@@ -69,7 +70,8 @@ public class DataSeedConfig implements CommandLineRunner {
         // Verificación de idempotencia a nivel general y por registro
         if (usuarioRepository.count() > 0
                 && usuarioRepository.existsByEmail(EMAIL_ADMIN)
-                && usuarioRepository.existsByEmail(EMAIL_REPRESENTANTE)) {
+                && usuarioRepository.existsByEmail(EMAIL_REPRESENTANTE)
+                && usuarioRepository.existsByEmail(EMAIL_ESTUDIANTE)) {
             log.info("[DataSeed] Los datos iniciales de prueba ya existen. Se omite el sembrado.");
             return;
         }
@@ -122,6 +124,20 @@ public class DataSeedConfig implements CommandLineRunner {
             usuarioRepository.save(representante);
             log.info("[DataSeed] Usuario REPRESENTANTE_EMPRESA creado: {} -> Empresa ID: {}",
                     EMAIL_REPRESENTANTE, empresaGuardada.getId());
+        }
+
+        // 4. Sembrar Usuario Estudiante de Prueba
+        if (!usuarioRepository.existsByEmail(EMAIL_ESTUDIANTE)) {
+            Usuario estudiante = new Usuario();
+            estudiante.setNombreCompleto("Estudiante CESDE");
+            estudiante.setEmail(EMAIL_ESTUDIANTE);
+            estudiante.setPasswordHash(passwordEncriptada);
+            estudiante.setRol(RolUsuario.ESTUDIANTE);
+            estudiante.setIdEmpresa(null);
+            estudiante.setActivo(Boolean.TRUE);
+
+            usuarioRepository.save(estudiante);
+            log.info("[DataSeed] Usuario ESTUDIANTE creado: {}", EMAIL_ESTUDIANTE);
         }
 
         log.info("[DataSeed] Sembrado de datos completado exitosamente.");
