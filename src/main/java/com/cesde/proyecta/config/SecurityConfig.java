@@ -48,7 +48,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/categorias/**", "/api/prioridades/**").hasRole(
                                 "ADMIN_UNIVERSIDAD"
                         )
-                        .requestMatchers(HttpMethod.GET, "/api/retos/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/retos/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/retos/**").hasAnyRole(
                                 "REPRESENTANTE_EMPRESA",
                                 "ADMIN_UNIVERSIDAD"
