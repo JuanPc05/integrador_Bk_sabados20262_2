@@ -11,17 +11,23 @@ public class UsuarioResponseDTO {
     private String email;
     private RolUsuario rol;
     private UUID idEmpresa;
+    private String nombreEmpresa;
     private Boolean activo;
 
     public UsuarioResponseDTO() {
     }
 
     public UsuarioResponseDTO(UUID id, String nombreCompleto, String email, RolUsuario rol, UUID idEmpresa, Boolean activo) {
+        this(id, nombreCompleto, email, rol, idEmpresa, null, activo);
+    }
+
+    public UsuarioResponseDTO(UUID id, String nombreCompleto, String email, RolUsuario rol, UUID idEmpresa, String nombreEmpresa, Boolean activo) {
         this.id = id;
         this.nombreCompleto = nombreCompleto;
         this.email = email;
         this.rol = rol;
         this.idEmpresa = idEmpresa;
+        this.nombreEmpresa = nombreEmpresa;
         this.activo = activo;
     }
 
@@ -63,6 +69,14 @@ public class UsuarioResponseDTO {
 
     public void setIdEmpresa(UUID idEmpresa) {
         this.idEmpresa = idEmpresa;
+    }
+
+    public String getNombreEmpresa() {
+        return nombreEmpresa;
+    }
+
+    public void setNombreEmpresa(String nombreEmpresa) {
+        this.nombreEmpresa = nombreEmpresa;
     }
 
     public Boolean getActivo() {

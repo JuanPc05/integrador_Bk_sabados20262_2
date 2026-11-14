@@ -108,20 +108,18 @@ public class ManejadorGlobalExcepciones {
     }
 
     @ExceptionHandler(ConflictoNegocioException.class)
-    public ResponseEntity<ErrorResponse> manejarConflictoNegocio(
+    public ResponseEntity<Map<String, Object>> manejarConflictoNegocio(
             ConflictoNegocioException ex,
             HttpServletRequest request) {
 
-        ErrorResponse response = new ErrorResponse(
-                LocalDateTime.now(),
-                HttpStatus.CONFLICT.value(),
-                HttpStatus.CONFLICT.getReasonPhrase(),
-                ex.getMessage(),
-                request.getRequestURI(),
-                null
-        );
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now().toString());
+        body.put("status", HttpStatus.CONFLICT.value());
+        body.put("error", HttpStatus.CONFLICT.getReasonPhrase());
+        body.put("message", ex.getMessage());
+        body.put("path", request.getRequestURI());
 
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
     }
 
     @ExceptionHandler(Exception.class)
