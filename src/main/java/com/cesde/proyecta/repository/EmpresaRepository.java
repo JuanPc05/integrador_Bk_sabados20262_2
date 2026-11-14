@@ -15,5 +15,7 @@ public interface EmpresaRepository extends JpaRepository<Empresa, UUID> {
 
     boolean existsByNit(String nit);
 
+    boolean existsByCorreoIgnoreCase(String correo);
+
     List<Empresa> findByActivaTrue();
 }

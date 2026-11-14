@@ -6,7 +6,9 @@ import com.cesde.proyecta.dto.UsuarioRequestDTO;
 import com.cesde.proyecta.dto.UsuarioResponseDTO;
 import com.cesde.proyecta.exception.ConflictoNegocioException;
 import com.cesde.proyecta.exception.CredencialesInvalidasException;
+import com.cesde.proyecta.model.entity.Empresa;
 import com.cesde.proyecta.model.entity.Usuario;
+import com.cesde.proyecta.repository.EmpresaRepository;
 import com.cesde.proyecta.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,13 +25,18 @@ import java.util.Base64;
 public class AuthServiceImpl implements AuthService {
 
     private final UsuarioRepository usuarioRepository;
+    private final EmpresaRepository empresaRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Value("${jwt.secret:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}")
     private String jwtSecret;
 
-    public AuthServiceImpl(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
+    public AuthServiceImpl(
+            UsuarioRepository usuarioRepository,
+            EmpresaRepository empresaRepository,
+            PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
+        this.empresaRepository = empresaRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -73,7 +80,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private UsuarioResponseDTO mapearAResponseDTO(Usuario usuario) {
-        return new UsuarioResponseDTO(
+        UsuarioResponseDTO dto = new UsuarioResponseDTO(
                 usuario.getId(),
                 usuario.getNombreCompleto(),
                 usuario.getEmail(),
@@ -81,6 +88,15 @@ public class AuthServiceImpl implements AuthService {
                 usuario.getIdEmpresa(),
                 usuario.getActivo()
         );
+
+        String nombreEmpresa = usuario.getEmpresa() != null
+                ? usuario.getEmpresa().getNombre()
+                : (usuario.getIdEmpresa() != null
+                        ? empresaRepository.findById(usuario.getIdEmpresa()).map(Empresa::getNombre).orElse(null)
+                        : null);
+
+        dto.setNombreEmpresa(nombreEmpresa);
+        return dto;
     }
 
     /**

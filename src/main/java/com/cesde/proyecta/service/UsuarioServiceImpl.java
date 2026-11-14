@@ -100,7 +100,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     private UsuarioResponseDTO mapearAResponseDTO(Usuario usuario) {
-        return new UsuarioResponseDTO(
+        UsuarioResponseDTO dto = new UsuarioResponseDTO(
                 usuario.getId(),
                 usuario.getNombreCompleto(),
                 usuario.getEmail(),
@@ -108,6 +108,8 @@ public class UsuarioServiceImpl implements UsuarioService {
                 usuario.getIdEmpresa(),
                 usuario.getActivo()
         );
+        dto.setNombreEmpresa(usuario.getEmpresa() != null ? usuario.getEmpresa().getNombre() : null);
+        return dto;
     }
 }
 

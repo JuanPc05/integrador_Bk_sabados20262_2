@@ -6,6 +6,9 @@ import com.cesde.proyecta.exception.ConflictoNegocioException;
 import com.cesde.proyecta.exception.RecursoNoEncontradoException;
 import com.cesde.proyecta.model.entity.Empresa;
 import com.cesde.proyecta.repository.EmpresaRepository;
+import com.cesde.proyecta.repository.UsuarioRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,9 +20,11 @@ import java.util.UUID;
 public class EmpresaServiceImpl implements EmpresaService {
 
     private final EmpresaRepository empresaRepository;
+    private final UsuarioRepository usuarioRepository;
 
-    public EmpresaServiceImpl(EmpresaRepository empresaRepository) {
+    public EmpresaServiceImpl(EmpresaRepository empresaRepository, UsuarioRepository usuarioRepository) {
         this.empresaRepository = empresaRepository;
+        this.usuarioRepository = usuarioRepository;
     }
 
     @Override
@@ -43,14 +48,30 @@ public class EmpresaServiceImpl implements EmpresaService {
     @Transactional
     public EmpresaResponseDTO crear(EmpresaRequestDTO request) {
         if (empresaRepository.existsByNit(request.getNit())) {
-            throw new ConflictoNegocioException("Ya existe una empresa registrada con el NIT: " + request.getNit());
+            throw new ConflictoNegocioException("El NIT ya está registrado: " + request.getNit());
         }
 
-        Empresa empresa = new Empresa();
-        aplicarDatos(empresa, request);
-        empresa.setActiva(Boolean.TRUE);
+        if (request.getCorreo() != null && !request.getCorreo().isBlank()
+                && empresaRepository.existsByCorreoIgnoreCase(request.getCorreo().trim())) {
+            throw new ConflictoNegocioException("El correo corporativo ya está registrado: " + request.getCorreo());
+        }
 
-        Empresa guardada = empresaRepository.save(empresa);
+        Empresa nuevaEmpresa = new Empresa();
+        aplicarDatos(nuevaEmpresa, request);
+        nuevaEmpresa.setActiva(Boolean.TRUE);
+
+        Empresa guardada = empresaRepository.save(nuevaEmpresa);
+
+        // Extraer el email del usuario autenticado desde SecurityContextHolder y vincular la nueva empresa
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated() && authentication.getName() != null) {
+            String emailAutenticado = authentication.getName();
+            usuarioRepository.findByEmail(emailAutenticado).ifPresent(usuario -> {
+                usuario.setEmpresa(guardada);
+                usuarioRepository.save(usuario);
+            });
+        }
+
         return mapearAResponseDTO(guardada);
     }
 
